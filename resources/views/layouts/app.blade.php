@@ -34,6 +34,8 @@
     <!-- iCheck -->
     <link rel="stylesheet" href="{{ asset('backend/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 
+    {{-- Material Design specs. --}}
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
         .custom-error .select2-selection {
@@ -117,6 +119,21 @@
             toastr.success(event.detail.message, 'Success!');
         })
 
+        window.addEventListener('hide-formplanta', event => {
+            $('#formplanta').modal('hide'); /* cerrar modal de tags */
+            toastr.success(event.detail.message, 'Success!');
+        })
+
+        window.addEventListener('hide-formcategoria', event => {
+            $('#formcategoria').modal('hide'); /* cerrar modal de tags */
+            toastr.success(event.detail.message, 'Success!');
+        })
+
+        window.addEventListener('hide-formseccion', event => {
+            $('#formseccion').modal('hide'); /* cerrar modal de tags */
+            toastr.success(event.detail.message, 'Success!');
+        })
+
         window.addEventListener('hide-formfalla', event => {
             $('#formfalla').modal('hide'); /* cerrar modal de tags */
             toastr.success(event.detail.message, 'Success!');
@@ -127,8 +144,18 @@
             toastr.success(event.detail.message, 'Success!');
         })
 
+        window.addEventListener('hide-formfallaeditconsul', event => {
+            $('#formfallaeditconsul').modal('hide'); /* cerrar modal de tags */
+            toastr.success(event.detail.message, 'Success!');
+        })
+
         window.addEventListener('hide-formtrabajoedit', event => {
             $('#formtrabajoedit').modal('hide'); /* cerrar modal de tags */
+            toastr.success(event.detail.message, 'Success!');
+        })
+        /* cerra modal de editar consulta de trabajo */
+        window.addEventListener('hide-formtrabajoeditconsulta', event => {
+            $('#formtrabajoeditconsulta').modal('hide'); /* cerrar modal de tags */
             toastr.success(event.detail.message, 'Success!');
         })
 
@@ -136,6 +163,13 @@
             $('#formtrabajoAdd').modal('hide'); /* cerrar modal de tags */
             toastr.success(event.detail.message, 'Success!');
         })
+
+        window.addEventListener('hide-formtrabajoAgregar', event => {
+            $('#formtrabajoAgregar').modal('hide'); /* cerrar modal de tags */
+            toastr.success(event.detail.message, 'Success!');
+        })
+
+
 
 
 
@@ -151,6 +185,18 @@
 
         window.addEventListener('show-formtag', event => {
             $('#formtag').modal('show');
+        })
+
+        window.addEventListener('show-formplanta', event => {
+            $('#formplanta').modal('show');
+        })
+
+        window.addEventListener('show-formcategoria', event => {
+            $('#formcategoria').modal('show');
+        })
+
+        window.addEventListener('show-formseccion', event => {
+            $('#formseccion').modal('show');
         })
 
         window.addEventListener('show-formfalla', event => {
@@ -178,12 +224,24 @@
             $('#formfallaedit').modal('show');
         })
 
+        window.addEventListener('show-formfallaeditconsul', event => {
+            $('#formfallaeditconsul').modal('show');
+        })
+
         window.addEventListener('show-formtrabajoedit', event => {
             $('#formtrabajoedit').modal('show');
+        })
+        /* para el formulario de consulta es para editar  */
+        window.addEventListener('show-formtrabajoeditconsulta', event => {
+            $('#formtrabajoeditconsulta').modal('show');
         })
 
          window.addEventListener('show-formtrabajoAdd', event => {
             $('#formtrabajoAdd').modal('show');
+         })
+
+         window.addEventListener('show-formtrabajoAgregar', event => {
+            $('#formtrabajoAgregar').modal('show');
          })
 
         window.addEventListener('show-form', event => {
@@ -226,5 +284,11 @@
     @yield('scrips') --}}
     <livewire:scripts />
 
+
+    {{-- <script type="text/javascript">
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script> --}}
 </body>
 </html>

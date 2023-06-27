@@ -20,7 +20,8 @@ class Tag18 extends Model
         'id_categoria',
         'id_status',
         'foto',
-
+        'tfalla',
+        'ttrabajo',
     ];
 
     public $timestamps = false;
@@ -35,7 +36,7 @@ class Tag18 extends Model
         if ($this->foto) {
 
             /* return Storage::disk('avatars')->url($this->avatar); */
-            return  asset('storage/images/planta/'.$this->foto);
+            return  asset('storage/planta/'.$this->foto);
         }
 
         return asset('noimage.png');
@@ -46,9 +47,8 @@ class Tag18 extends Model
         if ($this->foto1) {
 
             /* return Storage::disk('avatars')->url($this->avatar); */
-            return  asset('storage/images/planta/'.$this->foto1);
+            return  asset('storage/planta/'.$this->foto1);
         }
-
         return asset('noimage.png');
     }
 

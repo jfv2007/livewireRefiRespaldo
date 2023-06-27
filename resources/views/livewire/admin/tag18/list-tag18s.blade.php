@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Lista de Tags</h1>
+                    <h1 class="text-success" class="m-0">Lista de Tags</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -16,69 +16,69 @@
     </div>
 
     <div class="row mb-3 p-2">
+        {{-- combo Centro --}}
         <div class="col-md-3">
             <div wire:ignore>
-                <label for="">Centros</label>
+                <label for="" class="text-warning" >Centros</label>
                 <select wire:model="selectedCentro" id="id_centro" class="form-control select2">
                     @foreach ($centros as $centro)
-                        <option value="{{ $centro->id }}">{{ $centro->nombre_centro }}
+                        <option value="{{ $centro->id }}" class="p-3 mb-2 bg-primary text-white">{{ $centro->nombre_centro }}
                         </option>
                     @endforeach
                 </select>
             </div>
         </div>
-
+        {{-- Select planta --}}
         <div class=" col-md-3 p2">
             <div wire:ingone>
                 @if ($selectedCentro != 0 && !is_null($selectedCentro))
-                    <label for="planta">Plantas</label>
+                    <label for="planta" class="text-warning">Plantas</label>
                     <select wire:model="selectedPlanta"
                         class="form-control @error('selectedPlanta') is-invalid @enderror">
-
                         @foreach ($plantas as $planta)
-                            <option value="{{ $planta->id }}">{{ $planta->nombre_planta }}
+                            <option value="{{ $planta->id }}" class="p-3 mb-2 bg-primary text-white">{{ $planta->nombre_planta }}
                             </option>
                         @endforeach
                     </select>
                 @endif
             </div>
         </div> {{-- "col-md-6" --}}
-
+        {{-- combo categoria --}}
         <div class="col-md-2">
             @if ($selectedCentro != 0 && !is_null($selectedCentro))
-                <label for="">Categoria</label>
+                <label for=" "class="text-warning">Categoria</label>
                 <select wire:model="selectedCategoria" class="form-control">
                     @foreach ($categorias as $categoria)
-                        <option value="{{ $categoria->id }}">{{ $categoria->descripcion_c }}
+                        <option value="{{ $categoria->id }}" class="p-3 mb-2 bg-primary text-white">{{ $categoria->descripcion_c }}
                         </option>
                     @endforeach
                 </select>
             @endif
         </div>
-
+        {{-- seleccion de centro --}}
         <div class="col-md-1">
             @if ($selectedCentro != 0 && !is_null($selectedCentro))
-                <label for="">Status</label>
+                <label for="" class="text-warning">Status</label>
                 <select wire:model="selectedStatus" class="form-control">
                     @foreach ($status as $statu)
-                        <option value="{{ $statu->id }}">{{ $statu->desc_status }}
+                        <option value="{{ $statu->id }}" class="p-3 mb-2 bg-primary text-white">{{ $statu->desc_status }}
                         </option>
                     @endforeach
                 </select>
             @endif
         </div>
-
+        {{-- por pagina --}}
         <div class="col-md-1">
-            <label for="">Per Page</label>
+            <label for="" class="text-warning">Per Page</label>
             <select class="form-control" wire:model=perPage>
-                <option value="5">5</option>
-                <option value="15">15</option>
-                <option value="25">25</option>
+                <option value="5" class="p-3 mb-2 bg-primary text-white">5</option>
+                <option value="15" class="p-3 mb-2 bg-primary text-white">15</option>
+                <option value="25" class="p-3 mb-2 bg-primary text-white">25</option>
             </select>
         </div>
-
+        {{-- Etiqueta Search --}}
         <div class="col-md-2">
-            <label for="">Search</label>
+            <label for="" class="text-warning">Search</label>
             <input type="text" style="text-transform:uppercase" class="form-control"
                 wire:model.debounce.350ms="search">
         </div>
@@ -105,10 +105,10 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="d-flex justify-content-end mb-2">
-
+                        @can('permission_create')
                         <button wire:click.prevent="addNewTag" class="btn btn-primary"><i
                                 class="fa fa-plus-circle mr-1"></i> Add New Tag</button>
-
+                        @endcan
                         {{--  <a href="{{ route('admin.tag18s.create') }}">
                             <button class="btn btn-primary"><i class="fa fa-plus-circle mr-1"></i> Add New
                                 Tag</button>
@@ -121,13 +121,14 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Tag</th>
-                                            <th scope="col">Descripcion</th>
-                                            <th scope="col">operacion</th>
-                                            <th scope="col">Ubicacion</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Options</th>
+                                            <th scope="col" class="text-primary">#</th>
+                                            <th scope="col" class="text-primary">imagen</th>
+                                            <th scope="col" class="text-primary">Tag descr</th>
+                                            <th scope="col" class="text-primary">Descripcion</th>
+                                            <th scope="col" class="text-primary">Operacion</th>
+                                            <th scope="col" class="text-primary">Ubicacion</th>
+                                            <th scope="col" class="text-primary">Status</th>
+                                            <th scope="col"class="text-primary">Options</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -136,13 +137,12 @@
                                                 <th scope="row">{{ $loop->iteration }}</th>
                                                 <td>
                                                     <img src="{{ $tag18->foto_url }}" style="width: 50px;"
-                                                        class="img img-circle mr-1" alt="">
-                                                    {{ $tag18->tag }}
+                                                          class="img img-circle mr-1" alt="">
                                                 </td>
+                                                <td>{{ $tag18->tag    }}</td>
                                                 <td>{{ $tag18->descripcion }}</td>
                                                 <td>{{ $tag18->operacion }}</td>
                                                 <td>{{ $tag18->ubicacion }}</td>
-                                                {{-- <td>{{ $tag18->tag18Centro->nombre_centro }}</td> --}}
                                                 <td>
                                                     @if ($tag18->tag18stags->desc_status == 'DISPONIBLE')
                                                         <span class="badge badge-primary">DISPONIBLE</span>
@@ -152,42 +152,61 @@
                                                         </span>
                                                     @endif
                                                 </td>
-                                                {{-- DISPONIBLE --}}
                                                 <td>
                                                     {{-- <a href="" wire:click.prevent="confirmAppointmentRemoval({{ $appointment->id }})">
                                                         <i class="fa fa-trash text-danger"></i>
                                                     </a> --}}
-                                                    <a href="" wire:click.prevent="edit({{ $tag18 }})">
+                                                    @can('permission_destroy')
+                                                    <a href="" wire:click.prevent="edit({{ $tag18 }})" data-toggle="tooltip" data-placement="top" title="Editar Tag">
                                                         <i class="fa fa-edit mr-2"></i>
                                                     </a>
-
+                                                    @endcan
+                                                </td>
+                                                <td>
                                                     {{-- <a href="{{ route('admin.tag18s.edit', $tag18) }}">
                                                         <i class="fa fa-edit mr-2"></i>
                                                     </a> --}}
-
-                                                    <a href=""
+                                                    {{-- ELIMINAR --}}
+                                                    @can('permission_destroy')
+                                                    <a href="" data-toggle="tooltip" data-placement="top" title="Eliminar"
                                                         wire:click.prevent="confirmTagRemoval({{ $tag18->id }})">
                                                         <i class="fa fa-trash text-danger mr-2"></i>
                                                     </a>
-
+                                                    @endcan
+                                                </td>
+                                                <td>
+                                                    {{-- AGREGAR FALLA --}}
                                                     @if ($tag18->tag18stags->desc_status == 'DISPONIBLE')
-                                                        <a href=""
+                                                        <a href="" data-toggle="tooltip" data-placement="top" title="Agregar Falla"
                                                             wire:click.prevent="addfalla({{ $tag18 }})">
                                                             <i class="fas fa-frown mr-2"></i>
                                                         </a>
-                                                    @elseif($tag18->tag18stags->desc_status)
+                                                     @elseif($tag18->tag18stags->desc_status)
                                                     @endif
-                                                    {{-- <a href="{{ route('admin.tag18s.list-fallas') }}" class="nav-link {{ request()->is('admin/tag18s') ? 'active': '' }}"> --}}
+                                                    </td>
+                                                    <td>
 
-                                                    <a  href="{{ route('admin.tag18s.list-fallas', $tag18) }}"  >
-                                                        <i class="fas fa-toolbox mr-2"></i>
-                                                    </a>
+                                                        {{-- SI TIENE FALLAS --}}
+                                                    @if ($tag18->tfalla == 'TRUE')
+                                                        <a  href="{{ route('admin.tag18s.list-fallas', $tag18) }}" data-toggle="tooltip" title="Ver descripcion Falla"  >
+                                                            <i class="fas fa-toolbox mr-2"></i>
+                                                        </a>
+                                                    @elseif($tag18->tfalla)
+                                                    @endif
+                                                    </td>
+                                                    <td>
 
+                                                    {{-- SI TIENE TRABAJOS --}}
+                                                    @if ($tag18->ttrabajo == 'TRUE')
+                                                        <a  href="{{ route('admin.tag18s.list-trabajos', $tag18) }}" data-toggle="tooltip" title="Ver descripcion trabajo" >
+                                                            <i class="fas fa-address-book mr-2"></i>
+                                                        </a>
+                                                    @elseif($tag18->ttrabajo)
+                                                    @endif
                                                     {{--  <a href=""
                                                         wire:click.prevent="addfalla({{ $tag18 }})">
                                                         <i class="fas fa-frown mr-2"></i>
                                                     </a> --}}
-
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -586,10 +605,11 @@
                                 <label for="customFile">Escoger imagen de falla </label>
                                 @if ($foto)
                                     <img src="{{ $foto->temporaryUrl() }}" class="img img-circle d-block mb-2"
-                                        style="width: 100px;" alt="">
+                                        style="width: 300px;" alt="">
                                 @else
                                     <img src="https://cdn.pixabay.com/photo/2016/10/11/21/43/geometric-1732847_960_720.jpg"
-                                        class="img img-circle d-block mb-2" style="width: 100px;" alt="">
+                                        class="img img-circle d-block mb-2"
+                                        style="width: 300px;" alt="">
                                 @endif
 
                                 {{-- aca es de la caja de texto --}}
@@ -769,5 +789,10 @@
 @push('js')
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
-@endpush
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+    </script>
+    @endpush
 </div>

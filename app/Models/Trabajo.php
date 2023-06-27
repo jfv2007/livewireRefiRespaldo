@@ -17,6 +17,7 @@ class Trabajo extends Model
         'foto_trabajo',
         'created_at',
         'updated_at',
+        'id_tag18',
     ];
 
     protected $appends = [
@@ -29,7 +30,7 @@ class Trabajo extends Model
         if ($this->foto_trabajo) {
 
             /* return Storage::disk('avatars')->url($this->avatar); */
-            return  asset('storage/images/planta/'.$this->foto_trabajo);
+            return  asset('storage/planta/'.$this->foto_trabajo);
         }
 
         return asset('noimage.png');
@@ -40,7 +41,7 @@ class Trabajo extends Model
         if ($this->foto1) {
 
             /* return Storage::disk('avatars')->url($this->avatar); */
-            return  asset('storage/images/planta/'.$this->foto1);
+            return  asset('storage/planta/'.$this->foto1);
         }
 
         return asset('noimage.png');

@@ -37,6 +37,7 @@ class ListFallas extends Component
     public $editFallaModal = false;
     public $descripciontrabajo;
     public $falla;
+    public $tag18;
     public $trabajo_id_tag18s;
     public $tagnombre;
     public $descripcion;
@@ -51,7 +52,7 @@ class ListFallas extends Component
     public $selectedSeccion = NULL;
     public $selectedCategoria = NULL;
     public $selectedStatus = NULL;
-    public $selectedStatusModalTrabajo = NULL;
+    public $selectedStatusModalTrabajoAgregar = NULL;
 
     public $mensaje;
     public $error1 = false;
@@ -132,17 +133,18 @@ class ListFallas extends Component
             $this->state,
             [
                 'descripcion_falla' => 'required',
-                'id_sfallas' => 'required',
+
             ],
             [
                 'descripcion_falla.required' => 'La descripcion de la falla es requerida.',
-                'id_sfallas".required' => 'El Status es requerido.',
+
 
             ]
         )->validate();
 
         $validateDate['descripcion_falla'] = $this->descripcionfalla;
-        $validateDate['id_sfallas'] = 3;
+         $validateDate['id_sfallas'] = 3;
+       /*  $validateDate['id_sfallas'] = $this->selectedStatusModalTrabajo; */
         /* dd($this->foto_falla); */
        /*   dd($this->selectedStatusModal); */
 
@@ -160,6 +162,7 @@ class ListFallas extends Component
         $this->falla->update($validateDate);
         $this->dispatchBrowserEvent('hide-formfallaedit', ['message' => 'Falla updated successfully!']);
     }
+
     public function confirmFallaRemoval($fallaId)
     {
         /* dd($tag18Id); */
@@ -175,16 +178,20 @@ class ListFallas extends Component
 
     public function addtrabajo(Falla $falla)
     {   /* Muestra el modal con los datos */
-        /*    dd($falla); */
+            /* dd($falla); */  /* muestra los valore de la falla */
            $this->showAddTrabajoModal= true;
 
-         $this->falla=$falla;
+        $this->falla=$falla;
         $this->statetrabajo=$falla->toArray();
-      /*    dd($this->statetrabajo); */
+         /*  dd($this->statetrabajo);  */
+
 
         $this->trabajo_id_tag18s = $this->statetrabajo['id_tag18s'];
+        /* $this->trabajo_id_tag18s = $this->statetrabajo['id_tag18s']; */
 
         $tag18 = Tag18::find($this->trabajo_id_tag18s);
+        $this->tag18=$tag18;
+      /*   dd($tag18); */
         /*   return $tag18; */
         $tagNombre = $tag18->tag;
         $tagDescripcion = $tag18->descripcion;
@@ -192,17 +199,19 @@ class ListFallas extends Component
         $this->tagnombre = $tagNombre;
         $this->descripcion = $tagDescripcion;
 
-
-
-          $this->dispatchBrowserEvent('show-formtrabajoAdd');
+        $this->dispatchBrowserEvent('show-formtrabajoAdd');
     }
 
     public function additemtrabajo()
     {
-           /* dd($this->statetrabajo); */
+
+            /* dd($this->statetrabajo);  */
            /* dd($this->selectedStatusModalTrabajo); */
            /* dd($this->descripciontrabajo); */
-          /*  dd($this->foto_trabajo); */
+             /* dd($this->trabajo_id_tag18s);  */
+
+          $tag18 = Tag18::find($this->trabajo_id_tag18s);
+        $this->tag18=$tag18;
 
           $user_id=auth()->user()->id;
           $date = Carbon::now();
@@ -214,22 +223,24 @@ class ListFallas extends Component
             $this->statetrabajo,
             [
                 'id'=>'required',
-
-             ],
-             [
+            ],
+            [
                 'id.required' =>' El Tag es requerido.',
-
-             ]
+            ]
              )->validate();
 
              $validateDate['id_falla']=$this->statetrabajo['id'];
              /* $validateDate['id_user'] = auth()->user()->id; */
              $validateDate['id_user'] = $this->statetrabajo['id_usuario'];
-              $validateDate['id_strabajos']=$this->selectedStatusModalTrabajo;
-            /*  $validateDate['id_strabajos'] = 4; */
+             if ($this->selectedStatusModalTrabajoAgregar == NULL)  {
+                $this->selectedStatusModalTrabajoAgregar= 5;
+            }
+              $validateDate['id_strabajos']=$this->selectedStatusModalTrabajoAgregar;
+           /*    $validateDate['id_strabajos'] = 4; */
              $validateDate['des_trabajo'] =  strtoupper($this->descripciontrabajo);
              $validateDate['created_at']=$date;
              $validateDate['updated_at']=$date;
+             $validateDate['id_tag18'] =$this->trabajo_id_tag18s;
 
             /* dd($this->validateDate); */
 
@@ -242,6 +253,9 @@ class ListFallas extends Component
 
             $validateFallas['id_sfallas'] = 4;
             $this->falla->update($validateFallas);
+
+             $validateTag18['ttrabajo'] = 'TRUE';
+            $this->tag18->update($validateTag18);
 
              $this->dispatchBrowserEvent('hide-formtrabajoAdd',['message' => 'agregado trabajo satisfactorio!']);
 

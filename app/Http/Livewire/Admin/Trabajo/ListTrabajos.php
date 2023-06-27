@@ -23,15 +23,15 @@ class ListTrabajos extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $state = [];
-
-
     public $statetrabajo =[];
-
     public $centros=[];
     public $modalcentros=[];
     public $modalplantas=[];
     public $fallaplantas=[];
     public $plantas=[];
+    public $seccions=[];
+    public $fallastatus=[];
+    public $statusModals=[];
 
     public $categorias;
     public $status;
@@ -39,6 +39,14 @@ class ListTrabajos extends Component
     public $foto_trabajo;
     public $editTrabajoModal=false;
     public $tag18;
+    public $planta;
+    public $trabajo;
+    public $id_falla;
+    public $des_trabajo;
+    public $id_tag18s;
+    public $tagnombre;
+    public $descripcionfalla;
+    public $descripciontrabajo1;
 
     public $selectedCentro = NULL;
     public $selectedPlanta = NULL;
@@ -58,22 +66,22 @@ class ListTrabajos extends Component
     public $search;
     public $messaje = 'Para mostrar';
     public $readyToLoad = false;
+    public $porAno;
 
 
     public function mount()
     {
-        /* $this->centros = Centro::all(); */
         $this->centros = Centro::orderBy('centro_id','DESC')->get();
-        /* $this->modalcentros = Centro::orderBy('centro_id','DESC')->get(); */
         $this->seccions = Seccion::all();
-        /* $this->modalseccions = Seccion::all(); */
         $this->categorias = Categoria::all();
-        /* $this->modalcategorias = Categoria::all(); */
         $this->status = Stag::all();
         $this->statusModals =Stag::all();
-        /* $this->modalstatus = Stag::all(); */
         $this->fallastatus=Stag::all();
         $this->tag18 = Tag18::all();
+
+        $fechaactual=now()->year;
+        $this->porAno=$fechaactual;
+
 
     }
 
@@ -90,7 +98,8 @@ class ListTrabajos extends Component
     public function edit(Trabajo $trabajo)
     {
 
-           /* dd($trabajo); */
+             /* dd($trabajo); */
+
         $this->editTrabajoModal = true;
         /*  dd('hola'); */
         $this->trabajo = $trabajo;
@@ -148,7 +157,8 @@ class ListTrabajos extends Component
 
     public function updatetrabajo()
     {
-           /* dd($this->state); */
+            /* dd($this->state);  */
+            /* dd($this->selectedStatusModal); */
 
         $validateDate = Validator::make(
             $this->state,
@@ -164,6 +174,11 @@ class ListTrabajos extends Component
 
 
         $validateDate['des_trabajo'] =  strtoupper($this->descripciontrabajo1);
+
+        if ($this->selectedStatusModal == NULL)  {
+            $this->selectedStatusModal= 5;
+        }
+
         $validateDate['id_strabajos'] = $this->selectedStatusModal;
         /* dd($validateDate); */
 
@@ -179,6 +194,7 @@ class ListTrabajos extends Component
 
          if ($this->selectedStatusModal == 7) {
             $validateTags['id_status'] = 1;
+
             $tag18->update($validateTags);
         }
 
@@ -203,7 +219,6 @@ class ListTrabajos extends Component
     public function render()
     {
           if ($this->readyToLoad  ) {
-
             /*  $trabajos = Trabajo::with('fallatrabajos', 'tagstrabajos','statustraba')
             ->paginate(); */
 
@@ -213,33 +228,28 @@ class ListTrabajos extends Component
                 /* ->select('trabajos.*','tag18s.*','fallas.*') */
                 ->when($this->selectedCentro, function ($query){
                     $query->whereRelation('fallatrabajos', 'id_cen', $this->selectedCentro)
-
-                ->select('trabajos.*');
-
+                    ->whereYear('trabajos.created_at',now()->year($this->porAno))
+                    ->select('trabajos.*');
                  })
                   ->when($this->selectedPlanta, function ($query) {
                     $query->whereRelation('fallatrabajos', 'id_planta', $this->selectedPlanta)
+
                     ->select('trabajos.*');
                 })
-
                 ->when($this->selectedCategoria, function ($query) {
                     $query->whereRelation('fallatrabajos', 'id_categoria',  $this->selectedCategoria)
                     ->select('trabajos.*');
                 })
-
                 ->when($this->selectedStatus, function ($query) {
                     $query->where('id_strabajos', $this->selectedStatus)
                     ->select('trabajos.*');
                 })
-
                 ->when($this->search, function($query){
                     $query->whereRelation('fallatrabajos', 'tag','like','%' .$this->search. '%')
                     ->select('trabajos.*');
-
                 })
 
                    ->paginate();
-
              } else {
                 $trabajos = [];
             }

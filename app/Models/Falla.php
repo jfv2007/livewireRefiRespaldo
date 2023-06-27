@@ -18,6 +18,7 @@ class Falla extends Model
         'foto_falla',
         'created_at',
         'updated_at',
+
     ];
 
     protected $appends = [
@@ -30,7 +31,7 @@ class Falla extends Model
         if ($this->foto_falla) {
 
             /* return Storage::disk('avatars')->url($this->avatar); */
-            return  asset('storage/images/planta/'.$this->foto_falla);
+            return  asset('storage/planta/'.$this->foto_falla);
         }
 
         return asset('noimage.png');
@@ -41,7 +42,7 @@ class Falla extends Model
         if ($this->foto1) {
 
             /* return Storage::disk('avatars')->url($this->avatar); */
-            return  asset('storage/images/planta/'.$this->foto1);
+            return  asset('storage/planta/'.$this->foto1);
         }
 
         return asset('noimage.png');

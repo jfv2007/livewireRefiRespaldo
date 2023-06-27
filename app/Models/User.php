@@ -3,14 +3,18 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
     const ROLE_ADMIN ='admin';
     const ROLE_USER = 'user';
 
@@ -35,9 +39,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'email_verified_at',
+        /* 'emai|,
         'created_at',
-        'updated_at',
+        'updated_at', */
     ];
 
     /**
@@ -53,12 +57,18 @@ class User extends Authenticatable
         'avatar_url',
     ];
 
+    public function setNameAttribute($value)
+    {
+       $this->attributes['name']= strtoupper($value);
+    }
+
     public function getAvatarUrlAttribute()
     {
         if ($this->avatar) {
 
-            /* return Storage::disk('avatars')->url($this->avatar); */
-            return  asset('storage/avatars/'.$this->avatar);
+             /* return Storage::disk('storage/avatars')->url($this->avatar) */;
+             return  asset('storage/avatars/'.$this->avatar);
+            /* return  asset('storage/planta/'.$this->foto_trabajo); */
         }
 
         return asset('noimage.png');

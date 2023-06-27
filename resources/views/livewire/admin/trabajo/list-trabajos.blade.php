@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Lista de Trabajos</h1>
+                    <h1 class="text-success" class="m-0">Lista de Trabajos</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -17,27 +17,62 @@
     </div>
 
     <div class="row mb-3 p-2">
+
+        {{-- Por año --}}
+        <div class="col-md-1">
+            <div wire:ignore>
+            <label for="" class="text-warning">Por año</label>
+            <select class="form-control" wire:model=porAno>
+                <option value= 2022 class="p-3 mb-2 bg-info text-dark">2022</option>
+                <option value= 2023 class="p-3 mb-2 bg-info text-dark">2023</option>
+                <option value= 2024 class="p-3 mb-2 bg-info text-dark">2024</option>
+                <option value= 2025 class="p-3 mb-2 bg-info text-dark">2025</option>
+            </select>
+            </div>
+        </div>
+
+        {{-- Por mes --}}
+        <div class="col-md-1">
+            <label for="" class="text-warning">Por Mes</label>
+            <select class="form-control" wire:model=porAno>
+                <option value= 1 class="p-3 mb-2 bg-info text-dark">ENERO</option>
+                <option value= 2 class="p-3 mb-2 bg-info text-dark">FEBRERO</option>
+                <option value= 3 class="p-3 mb-2 bg-info text-dark">MARZO</option>
+                <option value= 4 class="p-3 mb-2 bg-info text-dark">ABRIL</option>
+                <option value= 5 class="p-3 mb-2 bg-info text-dark">MAYO</option>
+                <option value= 6 class="p-3 mb-2 bg-info text-dark">JUNIO</option>
+                <option value= 7 class="p-3 mb-2 bg-info text-dark">JULIO</option>
+                <option value= 8 class="p-3 mb-2 bg-info text-dark">AGOSTO</option>
+                <option value= 9 class="p-3 mb-2 bg-info text-dark">SEPTIEMBRE</option>
+                <option value= 10 class="p-3 mb-2 bg-info text-dark">OCTUBRE</option>
+                <option value= 11 class="p-3 mb-2 bg-info text-dark">NOVIEMBRE</option>
+                <option value= 12 class="p-3 mb-2 bg-info text-dark">DICIEMBRE</option>
+            </select>
+        </div>
+
+
+        {{-- Por centros --}}
         <div class="col-md-3">
             <div wire:ignore>
-                <label for="">Centros</label>
+                <label for="" class="text-warning">Centros</label>
                 <select wire:model="selectedCentro" id="id_centro" class="form-control select2">
                     @foreach ($centros as $centro)
-                        <option value="{{ $centro->id }}">{{ $centro->nombre_centro }}
+                        <option value="{{ $centro->id }}" class="p-3 mb-2 bg-info text-dark">{{ $centro->nombre_centro }}
                         </option>
                     @endforeach
                 </select>
             </div>
         </div>
 
+        {{-- Por plantas --}}
         <div class=" col-md-3 p2">
             <div wire:ingone>
                 @if ($selectedCentro != 0 && !is_null($selectedCentro))
-                    <label for="planta">Plantas</label>
+                    <label for="planta" class="text-warning">Plantas</label>
                     <select wire:model="selectedPlanta"
                         class="form-control @error('selectedPlanta') is-invalid @enderror">
-
                         @foreach ($plantas as $planta)
-                            <option value="{{ $planta->id }}">{{ $planta->nombre_planta }}
+                            <option value="{{ $planta->id }}" class="p-3 mb-2 bg-info text-dark">{{ $planta->nombre_planta }}
                             </option>
                         @endforeach
                     </select>
@@ -45,26 +80,28 @@
             </div>
         </div> {{-- "col-md-6" --}}
 
+        {{-- Por categoria --}}
         <div class="col-md-2">
             @if ($selectedCentro != 0 && !is_null($selectedCentro))
-                <label for="">Categoria</label>
+                <label for="" class="text-warning">Categoria</label>
                 <select wire:model="selectedCategoria" class="form-control">
                     @foreach ($categorias as $categoria)
-                        <option value="{{ $categoria->id }}">{{ $categoria->descripcion_c }}
+                        <option value="{{ $categoria->id }}" class="p-3 mb-2 bg-info text-dark">{{ $categoria->descripcion_c }}
                         </option>
                     @endforeach
                 </select>
             @endif
         </div>
 
+        {{-- Por status --}}
         <div class="col-md-1">
             @if ($selectedCentro != 0 && !is_null($selectedCentro))
-                <label for="">Status</label>
+                <label for="" class="text-warning">Status</label>
                 <select wire:model="selectedStatus" class="form-control">
-                    <option value=4>ATENDIDO</option>
-                    <option value=5>PEND. ENTREGAR MANTTO.</option>
-                    <option value=6>PEND. ENTREGAR C.I.A.</option>
-                    <option value=7>TERMINADO</option>
+                    <option value=4 class="p-3 mb-2 bg-info text-dark">ATENDIDO</option>
+                    <option value=5 class="p-3 mb-2 bg-info text-dark">PEND. ENTREGAR MANTTO.</option>
+                    <option value=6 class="p-3 mb-2 bg-info text-dark">PEND. ENTREGAR C.I.A.</option>
+                    <option value=7 class="p-3 mb-2 bg-info text-dark">TERMINADO</option>
                     {{-- @foreach ($status as $statu)
                         <option value="{{ $statu->id }}">{{ $statu->desc_status }}
                         </option>
@@ -73,17 +110,19 @@
             @endif
         </div>
 
+        {{-- por paginacion --}}
         <div class="col-md-1">
-            <label for="">Per Page</label>
+            <label for="" class="text-warning">Per Page</label>
             <select class="form-control" wire:model=perPage>
-                <option value="5">5</option>
-                <option value="15">15</option>
-                <option value="25">25</option>
+                <option value="5" class="p-3 mb-2 bg-info text-dark">5</option>
+                <option value="15" class="p-3 mb-2 bg-info text-dark">15</option>
+                <option value="25" class="p-3 mb-2 bg-info text-dark">25</option>
             </select>
         </div>
 
+        {{-- Por busqueda --}}
         <div class="col-md-2">
-            <label for="">Search</label>
+            <label for="" class="text-warning">Search</label>
             <input type="text" style="text-transform:uppercase" class="form-control" wire:model.debounce.350ms="search">
         </div>
 
@@ -101,14 +140,14 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col"></th>
-                                                <th scope="col">Tag</th>
-                                                <th scope="col">Descripcion</th>
-                                                <th scope="col">Descripcion falla</th>
-                                                <th scope="col">Descripcion trabajo</th>
-                                                <th scope="col">Status Trabajo</th>
-                                                <th scope="col">Options</th>
+                                                <th scope="col" class="text-info">#</th>
+                                                <th scope="col" class="text-info"></th>
+                                                <th scope="col" class="text-info">Tag nombre</th>
+                                                <th scope="col" class="text-info">Descripcion</th>
+                                                <th scope="col" class="text-info">Descripcion falla</th>
+                                                <th scope="col" class="text-info">Descripcion trabajo</th>
+                                                <th scope="col" class="text-info">Status Trabajo</th>
+                                                <th scope="col" class="text-info">Options</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -146,11 +185,13 @@
                                                     <td>{{ $falla->fllastatus->status_revison }}</td>
                                                     <td>{{ $falla->created_at }}</td> --}}
                                                     <td>
-                                                        <a href=""
+                                                        <a href="" data-toggle="tooltip" data-placement="top" title="Editar Trabajo"
                                                             wire:click.prevent="edit({{ $trabajo }})">
                                                             <i class="fa fa-edit mr-2"></i>
                                                         </a>
-                                                        <a href=""
+                                                    </td>
+                                                    <td>
+                                                        <a href="" data-toggle="tooltip" data-placement="top" title="Eliminar Trabajo"
                                                             wire:click.prevent="confirmTrabajoRemoval({{ $trabajo->id }})">
                                                             <i class="fa fa-trash text-danger mr-2"></i>
                                                         </a>
@@ -253,6 +294,7 @@
                                         class="block text-sm font-medium text-gray-700">Status</label>
                                     <select wire:model.defer="selectedStatusModal" id="id_status"
                                         class="form-control @error('selectedStatusModal') is-invalid @enderror">
+                                        <option value="">Seleccionar el Status</option>
                                         <option value=5>PEND. ENTREGAR MANTTO.</option>
                                         <option value=6>PEND. ENTREGAR C.I.A.</option>
                                         <option value=7>TERMINADO</option>

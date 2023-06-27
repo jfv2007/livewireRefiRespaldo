@@ -67,6 +67,9 @@ class ListTag18s extends Component
     public $selectedPlantaFalla = NULL;
     public $selectedTurnoFalla=NULL;
     public $selectedStatusFalla=NULL;
+   /*  public $showFallaModal= false; */
+
+
 
     protected $listeners = ['deleteConfirmed' => 'deleteTag'];
 
@@ -89,7 +92,9 @@ class ListTag18s extends Component
         $this->modalseccions = Seccion::all();
         $this->categorias = Categoria::all();
         $this->modalcategorias = Categoria::all();
-        $this->status = Strabajo::all();
+        /* $this->status = Strabajo::all(); */
+        $this->status = Stag::all();
+
         $this->modalstatus = Stag::all();
         $this->fallastatus=Stag::all();
         /* $this->fallas= Falla::all(); */
@@ -207,6 +212,7 @@ class ListTag18s extends Component
              )->validate();
             $validateDate['id_tag18s']=$this->statefalla['id'];
              $validateDate['id_usuario'] = auth()->user()->id;
+
              /* $validateDate['id_sfallas']=$this->selectedStatusFalla; */
              $validateDate['id_sfallas']=3;
 
@@ -214,6 +220,7 @@ class ListTag18s extends Component
              $validateDate['turno']=$this->selectedTurnoFalla;
              $validateDate['created_at']=$date;
              $validateDate['updated_at']=$date;
+
 
              /* dd($validateDate); */
               if ($this->foto) {
@@ -234,6 +241,7 @@ class ListTag18s extends Component
 
             /* $validateTags['id_status']=$this->selectedStatusFalla; */
             $validateTags['id_status'] = 2;
+            $validateTags['tfalla'] ='TRUE';
             $this->tag18->update($validateTags);
 
             $this->dispatchBrowserEvent('hide-formfalla',['message' => 'La falla del Tag  creado!'] );
@@ -273,7 +281,7 @@ class ListTag18s extends Component
         $this->dispatchBrowserEvent('show-formtag');
     }
 
-    
+
     public function llamarHistorial()
     {
           /* dd('here'); */
@@ -283,7 +291,7 @@ class ListTag18s extends Component
     }
     public function addfalla(Tag18 $tag18)
     {
-          /* dd($tag18); */
+         /*   dd($tag18); */
            $this->showFallaModal= true;
 
         $this->tag18=$tag18;
@@ -336,8 +344,6 @@ class ListTag18s extends Component
     {
         $this->resetPage();
     }
-
-
 
     public function render()
     {

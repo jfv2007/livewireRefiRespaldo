@@ -110,24 +110,34 @@
                                                 @endif
                                             </td>
 
-
-
                                              {{-- <td>{{ $falla->fllastatus->status_revison }}</td>  --}}
                                             <td>{{ $falla->created_at }}</td>
                                             <td>
-                                              <a href="" wire:click.prevent="edit({{ $falla }})">
+                                              <a href="" data-toggle="tooltip" data-placement="top" title="Editar Falla"
+                                                    wire:click.prevent="editconsul({{ $falla }})">
                                                         <i class="fa fa-edit mr-2"></i>
                                                     </a>
-                                                    <a href=""
+                                                    <a href="" data-toggle="tooltip" data-placement="top" title="Eliminar Falla"
                                                         wire:click.prevent="confirmFallaRemoval({{ $falla->id }})">
                                                         <i class="fa fa-trash text-danger mr-2"></i>
                                                     </a>
 
-                                                    <a href=""
-                                                        wire:click.prevent="addtrabajo({{ $falla }})">
+                                                    {{-- SI TIENE TRABAJOS --}}
+                                                    @if ($tag18->ttrabajo == 'TRUE')
+                                                    @elseif($tag18->ttrabajo)
+                                                        <a href="" data-toggle="tooltip" data-placement="top" title="Agregar Trabajo"
+                                                        wire:click.prevent="agregartrabajo({{ $falla }})"> {{-- hacer el modal --}}
                                                         <i class="fas fa-brush mr-2"></i>
-                                                    </a>
-
+                                                        </a>
+                                                    @endif
+                                                    {{-- SI TIENE TRABAJOS --}}
+                                                    @if ($tag18->ttrabajo == 'TRUE')
+                                                        <a  href="{{ route('admin.tag18s.list-trabajos', $tag18) }}"
+                                                        data-toggle="tooltip" data-placement="top" title="Consultar Trabajo" >
+                                                            <i class="fas fa-address-book mr-2"></i>
+                                                        </a>
+                                                    @elseif($tag18->ttrabajo)
+                                                    @endif
                                                 {{-- </td> --}}
                                         </tr>
                                     @endforeach
@@ -155,6 +165,275 @@
         </div><!-- /.container-fluid -->
     </div> {{-- content --}}
 
+
+    <!-- Modal   y agreggar Trabajo z-->
+    <div class="modal fade"wire:ignore.self id="formtrabajoAgregar" role="dialog" aria-labelledby="exampleModalLabel"  aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <form autocomplete="off" wire:submit.prevent="showAgregarTrabajoModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                            <span>Agregar Trabajo al Tag </span>
+                    </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{-- ID del tag invisible --}}
+                    <div class="invisible"  >
+                        <label for="trabajo_id_tag18s">id de Tag para el trabajo</label>
+                        <input type="text" wire:model.defer="trabajo_id_tag18s"
+                            class="form-control @error('trabajo_id_tag18s') is-invalid @enderror" id="trabajo_id_tag18s"
+                            aria-describedby="trabajo_id_tag18ssHelp" placeholder="Id del Tag" readonly="readonly"  >
+                        @error('trabajo_id_tag18s')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    {{-- Nombre del Tag --}}
+                    <div class="form-group">
+                        <label for="tagnombre">Nombre de Tag</label>
+                        <input type="text" wire:model.defer="tagnombre"
+                            class="form-control @error('tagnombre') is-invalid @enderror" id="tagnombre"
+                            aria-describedby="tagnombreHelp" placeholder="Nombre del tag" readonly="readonly">
+                        @error('tagnombre')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    {{-- Descripcion del Tag --}}
+                    <div class="form-group">
+                        <label for="descripcion">Descripcion de tag</label>
+                        <input type="text" wire:model.defer="descripcion"
+                            class="form-control @error('descripcion') is-invalid @enderror" id="descripcion"
+                            aria-describedby="descripcionHelp" placeholder="Introducir descripcion" readonly="readonly">
+                        @error('descripcion')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    {{-- Descripcion del Trabajo --}}
+                    <div class="form-group">
+                        <label for="descripciontrabajo">Descripcion del Trabajo</label>
+                        <input type="text" style="text-transform:uppercase" wire:model.defer="descripciontrabajo"
+                            class="form-control @error('descripciontrabajo') is-invalid @enderror" id="descripciontrabajo"
+                            aria-describedby="descripciontrabajoHelp">
+                        @error('descripciontrabajo')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+
+                    {{--Status del trabajo--}}
+                    <div class="col-span-6 sm:col-span-3 mt-3">
+                        <div liwire:ignore>
+                            <label for="" class="block text-sm font-medium text-gray-700">Status</label>
+                            <select wire:model.defer="selectedStatusModalTrabajo" id="id_status"
+                                class="form-control @error('selectedStatusModalTrabajo') is-invalid @enderror">
+                               {{--  <option value="">Seleccionar el Status</option> --}}
+                                 {{--  @foreach ($status as $statu)
+                                    <option value="{{ $statu->id }}">{{ $statu->status_trabajos }}
+                                    </option>
+                                @endforeach --}}
+                                <option value=5>PEND. ENTREGAR POR MANTTO</option>
+                                {{-- <option value=6>PEND. ENTREGAR POR C.I.A.</option> --}}
+                              {{--   <option value = 4>ATENDIDO</option> --}}
+                            </select>
+                            @error('selectedStatusModalTrabajo')
+                                <div class="invalid-feedback">
+                                    {{ $mensaje }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div> {{-- "col-md-6" --}}
+
+                    {{-- Fotografia Trabajo --}}
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="customFile">escoger imagen del Trabajo </label>
+                            @if ($foto_trabajo)
+                                <img src="{{ $foto_trabajo->temporaryUrl() }}" class="img img-circle d-block mb-2"
+                                    style="width: 200px;" alt="">
+                            @else
+                                 <img src="https://cdn.pixabay.com/photo/2016/10/11/21/43/geometric-1732847_960_720.jpg" class="img img-circle d-block mb-2"
+                                    style="width: 100px;" alt="">
+                                     {{-- <img src="{{ $state['foto_url'] ?? '' }}" class="img img-circle d-block mb-2"
+                                    style="width: 200px;" alt=""> --}}
+                            @endif
+
+                            {{-- aca es de la caja de texto --}}
+                            <div class="custom-file">
+                                <input wire:model="foto_trabajo" type="file" class="custom-file-input"
+                                    id="customFile">
+                                {{-- <div x-show.transition="isUploading" class="progress progress-sm mt-2 rounded">
+                                </div> --}}
+                                <label class="custom-file-label" for="customFile">
+                                    @if ($foto_trabajo)
+                                        {{ $foto_trabajo->getClientOriginalName() }}
+                                    @else
+                                        Choose Image
+                                    @endif
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
+                            class="fa fa-times mr-1"></i> Cancel</button>
+                    <button wire:click.prevent="addtrabajoitem" class="btn btn-primary"><i class="fa fa-save mr-1"></i>
+                            <span>Guardar cambios</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div> {{-- Modal --}}
+
+<!-- Modal Editar-->
+<div class="modal fade"wire:ignore.self id="formfallaeditconsul" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <form autocomplete="off" wire:submit.prevent="editFallaModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                        <span>Edit falla </span>
+                </h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{-- ID de Tag invisible --}}
+                <div class="invisible"  >
+                    <label for="id_tag18s">id de Tag</label>
+                    <input type="text" wire:model.defer="id_tag18s"
+                        class="form-control @error('id_tag18s') is-invalid @enderror" id="id_tag18s"
+                        aria-describedby="id_tag18sHelp" placeholder="Id del Tag" readonly="readonly"  >
+                    @error('id_tag18s')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                {{-- Nombre del tag --}}
+                <div class="form-group">
+                    <label for="tagnombre">Nombre de Tag</label>
+                    <input type="text" wire:model.defer="tagnombre"
+                        class="form-control @error('tagnombre') is-invalid @enderror" id="tagnombre"
+                        aria-describedby="tagnombreHelp" placeholder="Id del Tag" readonly="readonly">
+                    @error('tagnombre')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                {{-- Descripcion del Tag  --}}
+                <div class="form-group">
+                    <label for="descripcion">Descripcion del tag</label>
+                    <input type="text" wire:model.defer="descripcion"
+                        class="form-control @error('descripcion') is-invalid @enderror" id="descripcion"
+                        aria-describedby="descripcionHelp" placeholder="Introducir descripcion" readonly="readonly">
+                    @error('descripcion')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                {{-- Descripcion de la falla  --}}
+                <div class="form-group">
+                    <label for="descripcionfalla">Descripcion de Falla</label>
+                    <input type="text" style="text-transform:uppercase" wire:model.defer="descripcionfalla"
+                        class="form-control @error('descripcionfalla') is-invalid @enderror" id="descripcionfalla"
+                        aria-describedby="descripcionfallaHelp">
+                    @error('descripcionfalla')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+
+
+                {{-- @livewire('admin.tag18.centro'); --}}
+                {{-- Status  --}}
+                <div class="col-span-6 sm:col-span-3 mt-3">
+                    <div liwire:ignore>
+                        <label for="" class="block text-sm font-medium text-gray-700">Status</label>
+                        <select wire:model.defer="selectedStatusModal" id="id_status"
+                            class="form-control @error('selectedStatusModal') is-invalid @enderror">
+                           {{--  <option value="">Seleccionar el Status</option> --}}
+                            {{-- @foreach ($status as $statu)
+                                <option value="{{ $statu->id }}">{{ $statu->desc_status }}
+                                </option>
+                            @endforeach --}}
+                            <option value=3>PEND. ATENDER</option>
+                        </select>
+                        @error('selectedStatusModal')
+                            <div class="invalid-feedback">
+                                {{ $mensaje }}
+                            </div>
+                        @enderror
+                    </div>
+                </div> {{-- "col-md-6" --}}
+                {{-- escoger imagen --}}
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="customFile">escoger imagen </label>
+                        @if ($foto_falla)
+                            <img src="{{ $foto_falla->temporaryUrl() }}" class="img img-circle d-block mb-2"
+                                style="width: 300px;" alt="">
+                        @else
+                           {{--  <img src="https://cdn.pixabay.com/photo/2016/10/11/21/43/geometric-1732847_960_720.jpg" class="img img-circle d-block mb-2"
+                                style="width: 100px;" alt=""> --}}
+                                 <img src="{{ $state['foto_url'] ?? '' }}" class="img img-circle d-block mb-2"
+                                style="width: 300px;" alt="">
+                        @endif
+
+                        {{-- aca es de la caja de texto --}}
+                        <div class="custom-file">
+                            <input wire:model="foto_falla" type="file" class="custom-file-input"
+                                id="customFile">
+                            {{-- <div x-show.transition="isUploading" class="progress progress-sm mt-2 rounded">
+                            </div> --}}
+                            <label class="custom-file-label" for="customFile">
+                                @if ($foto_falla)
+                                    {{ $foto_falla->getClientOriginalName() }}
+                                @else
+                                    Choose Image
+                                @endif
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
+                        class="fa fa-times mr-1"></i> Cancel</button>
+                <button wire:click.prevent="updateFallaConsulta" class="btn btn-primary"><i class="fa fa-save mr-1"></i>
+
+                        <span>Guardar cambios</span>
+
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+</div> {{-- Modal --}}
 
 
 </div>

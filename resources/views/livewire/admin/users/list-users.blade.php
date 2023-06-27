@@ -88,7 +88,8 @@
             <!-- /.row -->
         </div><!-- /.container-fluid -->
     </div> <!-- /.content -->
-    <!-- Modal -->
+
+    <!-- Modal Nuevo Usuario y Editar -->
     <div class="modal fade" id="form" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
         wire:ignore.self>
         <div class="modal-dialog" role="document">

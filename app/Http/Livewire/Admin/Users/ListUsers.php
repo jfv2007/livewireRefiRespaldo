@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 
 use Livewire\WithFileUploads;
+use Spatie\Permission\Models\Role;
 
 class ListUsers extends AdminComponent
 {
@@ -36,6 +37,8 @@ class ListUsers extends AdminComponent
         /* dd('hola'); */
         /* dd($this->photo); */
         /*  dd($this->state); */
+
+
         $validateDate = Validator::make($this->state, [
             'name' => 'required',
             'email' => 'required|email|unique:users',
@@ -59,7 +62,8 @@ class ListUsers extends AdminComponent
         /* return redirect()->back(); */
     }
 
-    public function edit(User $user){
+    public function edit(User $user)
+    {
          /* dd($user);  */
         $this->reset();
         $this->showEditModal = true;
@@ -69,7 +73,8 @@ class ListUsers extends AdminComponent
         $this->dispatchBrowserEvent('show-form');
     }
 
-    public function updateUser(){
+    public function updateUser()
+    {
         /* dd('here'); */
         $validateDate = Validator::make($this->state, [
             'name'=>'required',
@@ -83,13 +88,12 @@ class ListUsers extends AdminComponent
            }
 
             if ($this->photo) {
-
-
             /*  {{ asset('storage/avatars/' delete($this->avatar) ) }}; */
-            Storage::disk('avatars')->delete($this->user->avatar);
+             Storage::disk('avatars')->delete($this->user->avatar);
             $validateDate['avatar'] = $this->photo->store('/', 'avatars');
+
             }
- 
+
            /* dd('done'); */
            $this->user->update($validateDate);
 
@@ -121,11 +125,14 @@ class ListUsers extends AdminComponent
         ->latest()->paginate(5);
 
 
+        $roles =Role::all()->pluck('name', 'id');
+
+        /* dd($roles); */
         /* $users=User::latest()->paginate(5); */
 
 
         return view('livewire.admin.users.list-users', [
-            'users'=>$users,
+            'users'=>$users, 'roles'=>$roles
         ]);
     }
 }
